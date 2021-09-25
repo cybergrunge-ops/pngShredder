@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
+    <script>
+let img
+let img2
+let keyed
+let keyed2
+
+function preload(){
+ img = loadImage("test.png"); 
+ img2 = loadImage("test.png"); 
+}
+
+function setup() {
+  img.resize(400, 400)
+  img2.resize(400, 400)
+  createCanvas(img.width, img.height);
+  keyed = Key(img, [random(0,255), random(0,255), random(0,255)], random(100,255))
+  keyed2 = Key(img, [random(0,255), random(0,255), random(0,255)], random(100,255))
+}
+
+function draw() {
+spacing = random(0,50);
+repeats = random(0,220);
+	spacing2 = random(0,50);
+	repeats2 = random(0,220);
+
+for(i=0;i<repeats;i=i+spacing){
+	image(keyed, i-25, 0);
+	}
+
+for(i2=0;i2<repeats2;i2=i2+spacing2){
+	image(keyed2, 0, i2-25);
+	}
+
+
+noLoop();
+}
+
+// helper for writing color to array
+function writeColor(image, x, y, red, green, blue, alpha) {
+  let index = (x + y * width) * 4;
+  image.pixels[index] = red;
+  image.pixels[index + 1] = green;
+  image.pixels[index + 2] = blue;
+  image.pixels[index + 3] = alpha;
+}
+
+function Key(image, color, level=50) {
+  image.loadPixels();
+  let out = new p5.Image(image.width, image.height)
+  out.loadPixels();
+  let keyVec = createVector(...color)
+  for (y = 0; y < image.height; y++) {
+    for (x = 0; x < image.width; x++) {
+      let col = image.get(x, y)
+      let colVec = createVector(...col)
+      let d = colVec.dist(keyVec)
+      let newCol = [...col]
+      if(d < level){
+        newCol[3] = 0
+      }
+      out.set(x, y, newCol)
+    }
+  }
+  out.updatePixels()
+  return out
+}
+</script>
+  </head>
+  <body>
+    <main>
+		<br><button onClick="window.location.reload();"	>Randomize</button><br>
+
+    </main>
+  </body>
+</html>
